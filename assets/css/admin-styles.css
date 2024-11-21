@@ -1,0 +1,36 @@
+/* Admin Styles */
+
+.mec-event-custom-dates label, .mec-event-ticket-details label, .mec-event-exclusion-dates label {
+    vertical-align: top !important;
+}
+.mec-event-form-field label {
+    margin-right: 15px;
+}
+.mec-event-form-field input[type="text"], .mec-event-form-field input[type="url"] {
+    width: 100%;
+    max-width: 600px;
+}
+.my-events-calendar-event-form textarea {
+    height: 100px;
+    width: 100%;
+    max-width: 600px;
+}
+.mec-button {
+    margin-right: 10px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+}
+.mec-button:hover {
+    background-color: #0056b3;
+    color: #fff;
+    text-decoration: none;
+}
+.mec-shortcode-input {
+    width: 100%;
+    max-width: 400px;
+}

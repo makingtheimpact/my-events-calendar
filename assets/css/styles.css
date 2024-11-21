@@ -1,0 +1,403 @@
+/* Calendar Styles */
+.fc-event {
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.fc-event:hover {
+    opacity: 0.8; /* Optional: Add a slight opacity change on hover */
+}
+.fc-h-event {
+    border: 0px !important;
+}
+
+/* Event Modal Styles */
+.mec-event-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.mec-event-modal-close-small {
+    font-size: 25px;
+    background: transparent;
+    border: 0px;
+}
+
+.mec-event-modal-close-small:hover {
+    background: transparent;
+    border: 0px;
+    opacity: 0.8;
+}
+
+.mec-event-modal-content {
+    background: white;
+    color: #333;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 600px;
+    width: 90%;
+    position: relative;
+}
+
+.mec-event-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 10px 10px 0px 0px;
+    padding: 5px 10px;
+    margin-bottom: 15px;
+}
+
+.mec-event-modal-header h2 {
+    font-size: 1.5em;
+    font-weight: bold;
+    vertical-align: middle;
+}
+
+.mec-event-modal-view-details {
+    font-size: 1.2em;
+    background: #0067d4;
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-right: 10px;
+    border: 0px;
+}
+
+.mec-event-modal-close-button {
+    background: #ccc;
+    color: #333;
+    font-size: 1.2em;
+    border: none;
+    cursor: pointer;
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+.mec-event-modal-view-details:hover {
+    color: #fff;
+    text-decoration: none;
+    opacity: 0.8;
+}
+.mec-event-modal-close-button:hover {
+    background: #acacac;
+    color: #333;
+    border: 0px;
+    text-decoration: none;
+}
+
+.mec-event-modal-body {
+    margin-top: 10px;
+}
+
+.mec-event-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.mec-event-modal {
+    border-radius: 15px;
+}
+.mec-event-modal-body img {
+    display: inline-block;
+    margin-right: 15px;
+}
+.mec-event-modal-body .mec-event-modal-details {
+    vertical-align: top;
+    display: inline-block;
+}
+
+/* Event Details Styles */
+.mec-event-details-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto; 
+    padding: 20px;
+}
+.mec-event-title h2 {
+    font-size: 1.8em;
+    font-weight: bold;
+}
+.mec-event-image-container img {
+    margin-bottom: 20px;
+}
+.mec-event-image {
+    width: 100%;
+}
+.mec-event-image img {
+    width: 100%;
+    height: auto;
+}
+.mec-event-date-details {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+.mec-event-date-details .mec-event-date, .mec-event-date-details .mec-event-date-range {
+    font-size: 1.3em;
+    font-weight: bold;
+    margin-top: 15px;
+    text-align: center;
+}
+.mec-event-date-details .mec-event-time {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-top: 0px;
+    text-align: center;
+}
+.mec-event-location-summary {
+    text-align: center;
+    margin-top: 20px;
+}
+.mec-event-location-summary .mec-event-location-name {
+    font-weight: bold;
+}
+.mec-event-location-summary .mec-event-location-address {
+    margin-top: 0px;
+    font-style: italic;
+}
+.my-events-calendar-share-buttons { 
+    border: 1px solid #cecece;
+    padding: 15px;
+    border-radius: 15px;
+    text-align: center;
+    margin-top: 20px;
+}
+.mec-share-button .dashicons {
+    margin-right: 10px;
+    font-size: 30px;
+    width: 30px;
+    height: 30px;
+}
+.mec-share-button {
+    color: #0067d4;
+    text-decoration: none;
+}
+.mec-share-button:hover, .mec-share-button:active {
+    color: #0f7bee;
+    text-decoration: none !important;
+}
+.mec-event-add-to-calendar-buttons {
+    margin-top: 20px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+.my-events-calendar-add-to-calendar-buttons a {
+    margin-right: 10px;
+    display: inline-block;
+    width: 100%;
+    max-width: 300px;
+    margin: 5px;
+    font-size: 1.1em;
+    background-color: #f5f5f5;
+    color: #5a5a5a;
+    border-radius: 15px;
+    border: 1px solid #d3d3d3;
+    text-decoration: none;
+    padding: 10px 20px;
+}
+.my-events-calendar-add-to-calendar-buttons a:hover {
+    background-color: #e9e9e9;
+    color: #5a5a5a;
+    text-decoration: none !important;
+}
+.mec-share-button-header h3 {
+    font-size: 1.1em;
+    font-weight: bold;
+    margin-top: 0px;
+}
+.mec-event-location-details .container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto; 
+}
+.mec-event-location-details-header h3 {
+    font-size: 1.1em;
+    font-weight: bold;
+    margin-top: 0px;
+}
+.mec-event-details-container .mec-event-location-details, .mec-event-details-container .mec-event-description {
+    margin-top: 25px; 
+    border: 1px solid #cecece;
+    padding: 15px;
+    border-radius: 15px;
+}
+.mec-event-details-container .mec-event-location-name, .mec-event-details-container .mec-event-description-header {
+    margin-top: 0px;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+.mec-event-details-container .mec-event-location-link-label {
+    font-weight: bold;
+}
+.mec-event-details-container .mec-event-location-url p {
+    margin-bottom: 0px;
+}
+.mec-event-details-container .mec-event-ticket-details {
+    border: 1px solid #cecece;
+    padding: 15px;
+    border-radius: 15px;
+}
+.mec-event-details-container .mec-event-ticket-cost {
+    font-size: 1.2em;
+}
+.mec-event-details-container .mec-event-ticket-cost-label {
+    font-weight: bold;
+}
+.mec-event-details-container .mec-event-ticket-cost-value {
+    font-weight: normal;
+    clear: both;
+}
+.mec-event-ticket-link {
+    font-weight: bold;
+    background-color: #0067d4;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    width: 100%;
+    text-align: center;
+    display: block;
+}
+.mec-event-ticket-link:hover, .mec-event-ticket-link:active {
+    background-color: #0f7bee;
+    color: #fff;
+    text-decoration: none;
+}
+.mec-event-ticket-details-text {
+    margin-top: 15px;
+    font-size: 1.1em;
+    font-style: italic;
+}
+.mec-event-description-header {
+    font-size: 1.1em;
+    font-weight: bold;
+    margin-top: 20px;
+}
+#mec-event-map {
+    width: 100%;
+    height: 400px;
+    margin-top: 20px;
+    margin-bottom: 5px;
+}
+@media (max-width: 768px) {
+    .mec-event-location-image {
+        margin-bottom: 15px;
+    }
+}
+
+/* Event List Styles */
+.mec-event-list-group-header {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+.mec-no-events-list-message {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-top: 20px;
+    text-align: center;
+}
+.mec-event-list-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 20px;
+    border-left-width: 20px;
+    border-top-width: 2px;
+    border-bottom-width: 2px;
+    border-right-width: 2px;
+    border-style: solid;
+    border-radius: 10px;
+}
+.mec-event-list-item-container-link, .mec-event-list-item-container-link:hover {
+    color: inherit;
+    text-decoration: none;
+}
+.mec-event-list-item-container-link:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.mec-event-list-item .container {
+    width: 100%; 
+    max-width: 100%;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+.mec-event-list-item .mec-event-title {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-top: 0px;
+}
+
+.mec-event-list-item .mec-event-date {
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+.mec-event-list-item .mec-event-location {
+    margin-top: 10px;
+}
+
+.mec-event-details {
+    flex: 1;
+}
+.mec-compact-event-list .mec-event-thumbnail {
+    margin-bottom: 10px;
+    width: 100%;
+    height: auto;
+    max-width: 100px;
+}
+.mec-compact-event-list .mec-event-list-group-header {
+    font-size: 1.2em;
+}
+.mec-compact-event-list .mec-event-list-item {
+    padding: 10px;
+    margin-bottom: 10px;
+}
+.mec-compact-event-list .mec-event-list-item .mec-event-title {
+    font-size: 1.2em;
+}
+.mec-compact-event-list .mec-event-list-item .mec-event-date {
+    font-size: 1em;
+}
+.mec-compact-event-list .mec-event-list-item .mec-event-location {
+    margin-top: 3px;
+}
+
+@media (max-width: 768px) {
+    .mec-event-list-item .mec-event-image {
+        margin-bottom: 15px;
+    }
+}
+@media (min-width: 768px) {
+    .mec-event-list-item .container {
+        width: 100%;
+        max-width: 100%;
+        padding-left: 0px;
+        padding-right: 0px;
+        margin-left: 0px;
+    }
+}
+
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1050;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5); /* Black w/ opacity */
+}
+
+.modal.show {
+    display: block; /* Show the modal */
+}
