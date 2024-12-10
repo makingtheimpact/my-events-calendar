@@ -2,7 +2,7 @@
 /*
 Plugin Name: My Events Calendar
 Description: A simple calendar and event management system for WordPress.
-Version: 1.0.1
+Version: 1.0.5
 Author: Making The Impact LLC
 License: GPL2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -44,8 +44,16 @@ function my_events_calendar_template_include($template) {
         $plugin_template = plugin_dir_path(__FILE__) . 'single-event.php';
         if (file_exists($plugin_template)) {            
             return $plugin_template;
-        } else {
-            error_log('No custom event template found in plugin. Path checked: ' . $plugin_template);
+        }
+    } elseif (is_singular('event_location')) {
+        $plugin_template = plugin_dir_path(__FILE__) . 'single-event_location.php';
+        if (file_exists($plugin_template)) {            
+            return $plugin_template;
+        }
+    } elseif (is_post_type_archive('event_location')) {
+        $plugin_template = plugin_dir_path(__FILE__) . 'archive-event_location.php';
+        if (file_exists($plugin_template)) {            
+            return $plugin_template;
         }
     }
     return $template;
@@ -115,15 +123,32 @@ function my_events_calendar_enqueue_scripts() {
     wp_localize_script('fullcalendar-custom', 'myCalendarAjax', array(
         'ajax_url' => admin_url('admin-ajax.php')
     ));
+
+    // Only load Google Maps API if we're on a single event page
+    if (is_singular('event')) {
+        $options = get_option('my_events_calendar_options');
+        $api_key = isset($options['google_maps_api_key']) ? $options['google_maps_api_key'] : '';
+        
+        if (!empty($api_key)) {
+            wp_enqueue_script(
+                'google-maps-api',
+                "https://maps.googleapis.com/maps/api/js?key={$api_key}&libraries=marker&v=beta&callback=initMap",
+                array(),
+                null,
+                true
+            );
+            wp_script_add_data('google-maps-api', 'async', true);
+        }
+    }
 }
 add_action('wp_enqueue_scripts', 'my_events_calendar_enqueue_scripts');
 
 function my_events_calendar_admin_enqueue_scripts($hook) {
     // The correct hook for the settings page based on the submenu slug
-    if ($hook === 'my-events-calendar_page_my-events-calendar-settings') {
-        // Enqueue WordPress color picker script and style
-        wp_enqueue_script('wp-color-picker');
+    if ($hook === 'events-calendar_page_my-events-calendar-settings') {
+        // Enqueue WordPress color picker
         wp_enqueue_style('wp-color-picker');
+        wp_enqueue_script('wp-color-picker');
         
         // Enqueue your custom admin script with dependencies
         wp_enqueue_script(
@@ -133,12 +158,19 @@ function my_events_calendar_admin_enqueue_scripts($hook) {
             '1.0',
             true
         );
+
+        // Initialize color picker
+        wp_add_inline_script('my-events-calendar-admin-js', '
+            jQuery(document).ready(function($) {
+                $(".mec-color-field").wpColorPicker();
+            });
+        ');
     }
 
     // Check if we are on the edit or add new event page
     if ($hook === 'post.php' || $hook === 'post-new.php') {
         global $post;
-        if ($post->post_type === 'event') {
+        if ($post && $post->post_type === 'event') {
             wp_enqueue_script(
                 'my-events-calendar-admin-js',
                 plugin_dir_url(__FILE__) . 'assets/js/admin-script.js',
@@ -149,7 +181,7 @@ function my_events_calendar_admin_enqueue_scripts($hook) {
         }
     }
 
-    // Optionally enqueue any additional admin styles globally for all admin pages (if needed)
+    // Enqueue admin styles globally for all admin pages
     wp_enqueue_style('my-events-calendar-admin-styles', plugin_dir_url(__FILE__) . 'assets/css/admin-styles.css');
 }
 add_action('admin_enqueue_scripts', 'my_events_calendar_admin_enqueue_scripts');
@@ -157,30 +189,6 @@ add_action('admin_enqueue_scripts', 'my_events_calendar_admin_enqueue_scripts');
 function my_events_calendar_enqueue_styles() {
     // Enqueue frontend styles
     wp_enqueue_style('my-events-calendar-styles', plugin_dir_url(__FILE__) . 'assets/css/styles.css');
-
-    // Inline styles for customization
-    $options = get_option('my_events_calendar_options');
-    $accent_background_color = $options['accent_background_color'] ?? '#0067d4';
-    $accent_background_color_hover = $options['accent_background_color_hover'] ?? '#0f7bee';
-    $accent_text_color = $options['accent_text_color'] ?? '#ffffff';
-    $accent_text_color_hover = $options['accent_text_color_hover'] ?? '#ffffff';
-
-    echo "<style>
-        .mec-share-button {
-            color: {$accent_background_color};
-        }
-        .mec-share-button:hover, .mec-share-button:active {
-            color: {$accent_background_color_hover};
-        }
-        .mec-event-ticket-link {
-            background-color: {$accent_background_color};
-            color: {$accent_text_color};
-        }
-        .mec-event-ticket-link:hover {
-            background-color: {$accent_background_color_hover};
-            color: {$accent_text_color_hover};
-        }
-    </style>";    
 }
 add_action('wp_head', 'my_events_calendar_enqueue_styles');
 

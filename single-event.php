@@ -6,6 +6,49 @@ if (wp_is_block_theme()) {
     get_header();
 }
 
+// Get color options
+$options = mec_get_options();
+$accent_background_color = $options['accent_background_color'] ?? '#0067d4';
+$accent_background_color_hover = $options['accent_background_color_hover'] ?? '#0f7bee';
+$accent_text_color = $options['accent_text_color'] ?? '#ffffff';
+$accent_text_color_hover = $options['accent_text_color_hover'] ?? '#ffffff';
+
+// Add inline styles for buttons
+$css = '<style>';
+$css .= "
+    .mec-event-ticket-link {
+        background-color: {$accent_background_color};
+        color: {$accent_text_color};
+        padding: 10px 20px;
+        border-radius: 4px;
+        text-decoration: none;
+        display: inline-block;
+        margin: 10px 0;
+        transition: all 0.3s ease;
+    }
+    .mec-event-ticket-link:hover, 
+    .mec-event-ticket-link:active {
+        background-color: {$accent_background_color_hover};
+        color: {$accent_text_color_hover};
+        text-decoration: none;
+    }    
+    .mec-share-button {
+        color: {$accent_background_color};
+    }
+    .mec-share-button:hover,
+    .mec-share-button:active {
+        color: {$accent_background_color_hover};
+    }
+    #mec-event-map {
+        height: 400px;
+        width: 100%;
+        margin: 20px 0;
+        border-radius: 8px;
+    }
+";
+$css .= '</style>';
+echo $css;
+
 echo '<div class="mec-event-details-container"><div class="container">';
 while (have_posts()) : the_post();
     $options = get_option('my_events_calendar_options');
@@ -51,13 +94,44 @@ while (have_posts()) : the_post();
     $all_day_event = get_post_meta($post_id, '_all_day_event', true);
     $show_images = isset($options['show_images']) && $options['show_images'] === 'yes';
 
+    // Get the first category color and text color
+    $categories = get_the_terms(get_the_ID(), 'event_category');
+    $event_category_bg = get_term_meta($categories[0]->term_id, 'category_color', true);
+    $event_category_text_color = get_term_meta($categories[0]->term_id, 'category_text_color', true);
+
     $post_url = get_permalink($post_id); // Get the event URL
+
+    // Get the display options
+    $show_categories = isset($options['show_categories']) ? $options['show_categories'] : 'yes';
+
+    // Only show categories if the setting is enabled
+    $category_list = '';
+    if ($show_categories === 'yes') {        
+        if ($categories && !is_wp_error($categories)) {
+            $category_list = '<div class="mec-event-category-bar" style="background-color: ' . esc_attr($event_category_bg) . '; color: ' . esc_attr($event_category_text_color) . ';">';
+            
+            // Create an array of category links
+            $category_links = array();
+            foreach ($categories as $category) {
+                $category_links[] = '<a href="' . esc_url(get_term_link($category)) . '" style="color: ' . esc_attr($event_category_text_color) . ' !important;"><span class="mec-event-category-name">' . 
+                                  esc_html($category->name) . '</span></a>';
+            }
+            
+            // Join the category links with commas
+            $category_list .= implode(', ', $category_links);
+            
+            $category_list .= '</div>';
+        }
+    }
     ?>
 
     <div class="row">
         <div class="col-md-12">
+            <?php if ($show_categories === 'yes' && $category_list) : ?>
+                <?php echo $category_list; ?>
+            <?php endif; ?>
             <div class="mec-event-title">
-                <h2><?php the_title(); ?></h2>
+                <h1 class="mec-event-title-text"><?php the_title(); ?></h1>
             </div>
             <div class="mec-event-image-container">
                 <?php if (has_post_thumbnail()) : ?>
@@ -132,63 +206,107 @@ while (have_posts()) : the_post();
     <div class="row">
         <div class="col-md-12">
             <div class="mec-event-location-details">
-                <div class="container">
-                    <div class="mec-event-location-details-header">
-                        <h3>Event Location</h3>
-                    </div>
-                    <div class="mec-event-location-details-body">
-                        <div class="container">
-                            <div class="row">
-                                <?php $location_thumbnail_set = has_post_thumbnail($location_id); ?>
-                                <div class="<?php echo $location_thumbnail_set ? 'col-md-2' : 'col-md-12'; ?>">
-                                    <?php if (has_post_thumbnail($location_id)) {
-                                        echo '<div class="mec-event-location-image">' . get_the_post_thumbnail($location_id, 'thumbnail') . '</div>';
-                                    } ?>
-                                </div>
-                                <div class="<?php echo $location_thumbnail_set ? 'col-md-10' : 'col-md-12'; ?>">
-                                    <?php if (isset($location_name) && $location_name != '') : ?>
-                                        <p class="mec-event-location-name"><?php if (isset($location_url)) : ?><a href="<?php echo esc_url($location_url); ?>" target="_blank"><?php endif; echo esc_html($location_name); ?><?php if (isset($location_url)) : ?></a><?php endif; ?></p>
-                                    <?php endif; ?>
-                                    <?php if ($location_type === 'physical') : ?>
-                                        <div class="mec-event-location">
-                                            <?php if (isset($location_address)) : ?>
-                                                <p class="mec-event-location-address"><?php echo esc_html($location_address); ?><?php if (isset($location_city) || isset($location_state) || isset($location_zip)) : ?><br><?php endif; ?>
-                                                <?php echo esc_html($location_city) . ', ' . esc_html($location_state) . ' ' . esc_html($location_zip); ?></p>
-                                            <?php endif; ?>
-                                        </div>
-                                    <?php endif; ?>
-                                    <?php if (isset($location_url) && $location_url != '') : ?>
-                                        <div class="mec-event-location-url">
-                                            <p><span class="mec-event-location-link-label">Event Location Link:</span> <a href="<?php echo esc_url($location_url); ?>" target="_blank"><?php echo isset($location_name) ? esc_html($location_name) : 'Event Location Link'; ?></a></p>
-                                        </div>
-                                    <?php endif; ?>
-                                </div>
+                <div class="mec-event-location-details-header">
+                    <h3>Event Location</h3>
+                </div>
+                <div class="mec-event-location-details-body">
+                    <div class="container">
+                        <div class="row">
+                            <?php $location_thumbnail_set = has_post_thumbnail($location_id); ?>
+                            <div class="<?php echo $location_thumbnail_set ? 'col-md-2' : 'col-md-12'; ?>">
+                                <?php if (has_post_thumbnail($location_id)) {
+                                    echo '<div class="mec-event-location-image">' . get_the_post_thumbnail($location_id, 'thumbnail') . '</div>';
+                                } ?>
+                            </div>
+                            <div class="<?php echo $location_thumbnail_set ? 'col-md-10' : 'col-md-12'; ?>">
+                                <?php if (isset($location_name) && $location_name != '') : ?>
+                                    <p class="mec-event-location-name"><?php if (isset($location_url)) : ?><a href="<?php echo esc_url($location_url); ?>" target="_blank"><?php endif; echo esc_html($location_name); ?><?php if (isset($location_url)) : ?></a><?php endif; ?></p>
+                                <?php endif; ?>
+                                <?php if ($location_type === 'physical') : ?>
+                                    <div class="mec-event-location">
+                                        <?php if (isset($location_address)) : ?>
+                                            <p class="mec-event-location-address"><?php echo esc_html($location_address); ?><?php if (isset($location_city) || isset($location_state) || isset($location_zip)) : ?><br><?php endif; ?>
+                                            <?php echo esc_html($location_city) . ', ' . esc_html($location_state) . ' ' . esc_html($location_zip); ?></p>
+                                        <?php endif; ?>
+                                    </div>
+                                <?php endif; ?>
+                                <?php if (isset($location_url) && $location_url != '') : ?>
+                                    <div class="mec-event-location-url">
+                                        <p><span class="mec-event-location-link-label">Event Location Link:</span> <a href="<?php echo esc_url($location_url); ?>" target="_blank"><?php echo isset($location_name) ? esc_html($location_name) : 'Event Location Link'; ?></a></p>
+                                    </div>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
                 </div>
-                <?php if ($api_key && $location_type == 'physical' && $location_full_address != '') : ?>
-                    <div id="mec-event-map" style="height: 400px;"></div>
+                <?php
+                // Get the display options
+                $options = get_option('my_events_calendar_options');
+                $show_map = isset($options['show_map']) ? $options['show_map'] : 'yes';
+                $api_key = isset($options['google_maps_api_key']) ? $options['google_maps_api_key'] : '';
+
+                // Only show map if setting is enabled and we have an API key and physical location
+                if ($show_map === 'yes' && !empty($api_key) && $location_type === 'physical' && !empty($location_address)) {
+                    ?>
+                    <div id="mec-event-map"></div>
                     <script>
-                        function initMap() {
-                            var geocoder = new google.maps.Geocoder();
-                            geocoder.geocode({'address': '<?php echo esc_js($location_full_address); ?>'}, function(results, status) {
-                                if (status === 'OK') {
-                                    var map = new google.maps.Map(document.getElementById('mec-event-map'), {
-                                        center: results[0].geometry.location,
-                                        zoom: 15
-                                    });
-                                    var marker = new google.maps.Marker({
-                                        map: map,
-                                        position: results[0].geometry.location
-                                    });
-                                }
-                            });
+                    let map;
+                    let marker;
+
+                    async function initMap() {
+                        if (!google || !google.maps) {
+                            console.error('Google Maps not loaded');
+                            return;
                         }
+
+                        const address = '<?php echo esc_js($location_address . ', ' . $location_city . ', ' . $location_state . ' ' . $location_zip); ?>';
+                        const geocoder = new google.maps.Geocoder();
+                        
+                        // Initial map setup with US center
+                        map = new google.maps.Map(document.getElementById('mec-event-map'), {
+                            zoom: 4,
+                            center: { lat: 39.8283, lng: -98.5795 }, // US center
+                            mapId: 'event_map'
+                        });
+
+                        try {
+                            // Geocode the address
+                            const response = await geocoder.geocode({ address: address });
+                            
+                            if (response && response.results && response.results[0]) {
+                                const location = response.results[0].geometry.location;
+                                
+                                // Center map on the location
+                                map.setCenter(location);
+                                map.setZoom(15);
+
+                                // Create the marker
+                                marker = new google.maps.marker.AdvancedMarkerElement({
+                                    map: map,
+                                    position: location,
+                                    title: '<?php echo esc_js($location_name); ?>'
+                                });
+                            } else {
+                                console.error('No results found for address:', address);
+                            }
+                        } catch (error) {
+                            console.error('Geocoding error:', error);
+                        }
+                    }
+
+                    // Make initMap available globally
+                    window.initMap = initMap;
                     </script>
-                    <script async defer src="https://maps.googleapis.com/maps/api/js?key=<?php echo esc_attr($api_key); ?>&callback=initMap"></script>
-                    <p class="mec-event-location-link">Map and Directions for <a href="https://www.google.com/maps/search/?api=1&query=<?php echo urlencode($location_full_address); ?>" target="_blank"><?php echo esc_html($location_full_address); ?></a></p>
-                <?php endif; ?>
+                    <p class="mec-event-location-link">
+                        <a href="https://www.google.com/maps/search/?api=1&query=<?php echo urlencode($location_full_address); ?>" 
+                            target="_blank" class="mec-map-direction-link">
+                            Get Directions to <?php echo esc_html($location_name); ?>
+                        </a>
+                    </p>
+                    <?php
+                }
+                ?>
+
             </div>
         </div>
     </div>

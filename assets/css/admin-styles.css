@@ -1,20 +1,72 @@
 /* Admin Styles */
 
-.mec-event-custom-dates label, .mec-event-ticket-details label, .mec-event-exclusion-dates label {
+/* Common styles for all settings sections */
+.mec-setting-section {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+    border-radius: 4px;
+}
+
+.mec-setting-section label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.mec-setting-section .description {
+    margin: 8px 0;
+    color: #666;
+    font-style: italic;
+}
+
+.mec-setting-section input[type="text"],
+.mec-setting-section input[type="url"],
+.mec-setting-section select {
+    width: 100%;
+    max-width: 400px;
+}
+
+.mec-setting-section input[type="checkbox"] {
+    margin-right: 8px;
+}
+
+/* Color picker specific styles */
+.mec-setting-section .wp-picker-container {
+    display: inline-block;
+    margin-bottom: 10px;
+}
+
+.mec-setting-section .wp-picker-container .wp-color-result.button {
+    margin: 0 6px 6px 0;
+}
+
+/* Section headers */
+.mec-settings-section-header {
+    margin: 30px 0 0px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.mec-settings-section-header h2 {
+    margin: 0;
+    font-size: 1.4em;
+    color: #23282d;
+}
+
+/* Existing specific styles */
+.mec-event-custom-dates label, 
+.mec-event-ticket-details label, 
+.mec-event-exclusion-dates label {
     vertical-align: top !important;
 }
+
 .mec-event-form-field label {
     margin-right: 15px;
 }
-.mec-event-form-field input[type="text"], .mec-event-form-field input[type="url"] {
-    width: 100%;
-    max-width: 600px;
-}
-.my-events-calendar-event-form textarea {
-    height: 100px;
-    width: 100%;
-    max-width: 600px;
-}
+
 .mec-button {
     margin-right: 10px;
     padding: 5px 10px;
@@ -25,12 +77,97 @@
     cursor: pointer;
     text-decoration: none;
 }
+
 .mec-button:hover {
     background-color: #0056b3;
     color: #fff;
     text-decoration: none;
 }
+
 .mec-shortcode-input {
     width: 100%;
     max-width: 400px;
+}
+
+/* Make all setting sections use the common styles */
+.mec-slug-setting,
+.mec-display-setting,
+.mec-color-setting {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+    border-radius: 4px;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 782px) {
+    .mec-setting-section {
+        padding: 12px;
+    }
+    
+    .mec-setting-section input[type="text"],
+    .mec-setting-section input[type="url"],
+    .mec-setting-section select {
+        max-width: 100%;
+    }
+}
+
+/* Shortcode display styles */
+.mec-shortcode-section {
+    margin: 20px 0;
+}
+
+.mec-shortcode-box {
+    background: #f8f9fa;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.mec-shortcode-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #23282d;
+}
+
+.mec-shortcode-input {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.mec-shortcode-input input {
+    flex: 1;
+    padding: 6px 8px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 13px;
+}
+
+.mec-shortcode-input button {
+    padding: 4px 12px;
+    background: #007cba;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.mec-shortcode-input button:hover {
+    background: #006ba1;
+}
+
+.mec-shortcode-description {
+    font-size: 13px;
+    color: #666;
+    margin-top: 5px;
+    font-style: italic;
 }

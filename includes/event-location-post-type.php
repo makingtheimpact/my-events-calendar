@@ -1,6 +1,10 @@
 <?php
 
 function my_events_calendar_register_location_post_type() {
+    // Get custom slug from options, fallback to default if not set
+    $options = get_option('my_events_calendar_options');
+    $location_slug = isset($options['location_slug']) ? $options['location_slug'] : 'event-location';
+
     $labels = array(
         'name' => 'Event Locations',
         'singular_name' => 'Event Location',
@@ -24,7 +28,7 @@ function my_events_calendar_register_location_post_type() {
         'show_ui' => true,
         'show_in_menu' => true,
         'query_var' => true,
-        'rewrite' => array('slug' => 'event-locations'),
+        'rewrite' => array('slug' => $location_slug),
         'capability_type' => 'post',
         'has_archive' => true,
         'hierarchical' => false,

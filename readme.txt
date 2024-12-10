@@ -38,7 +38,33 @@ Navigate to the 'Events' menu in the WordPress admin and click 'Add New' to crea
 === Can I customize the appearance of the calendar? ===
 Yes, you can customize the styles through the plugin settings and your theme's CSS.
 
+=== Slug Conflicts ===
+
+The plugin uses the following URL slugs by default:
+- /events/ - For the events listing
+- /event-location/ - For event locations
+- /event-category/ - For event categories
+
+If these slugs conflict with existing pages on your site, you have two options:
+
+1. Change the slug of your existing page(s)
+2. Customize the plugin's slugs in Settings > My Events Calendar > URL Slugs
+
+Note: After changing any slugs, you may need to refresh your permalinks by going to Settings > Permalinks and clicking "Save Changes".
+
 == Changelog ==
+
+=== 1.0.3 ===
+* Updated slug handling to prevent conflicts.
+* Added template files for single and archive event locations.
+* Changed the GitHub updater to use proxy server.
+
+=== 1.0.2 ===
+* Fixed bugs and made improvements.
+
+=== 1.0.1 ===
+* Added GitHub Updater
+
 === 1.0 ===
 * Initial release of My Events Calendar.
 

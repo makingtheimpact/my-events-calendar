@@ -23,8 +23,22 @@ My Events Calendar is a simple and flexible calendar and event management system
 - Customize event categories and settings from the plugin settings page.
 
 ## Changelog
-### 1.0
+### 1.0.1
 - Initial release of My Events Calendar.
+
+### 1.0.2
+- Bug fixes and improvements.
+
+### 1.0.3
+- Updated slug handling to prevent conflicts.
+- Added template files for single and archive event locations.
+- Changed the GitHub updater to use proxy server.
+
+### 1.0.4
+- Bug fixes and improvements.
+
+### 1.0.5
+- Fixed bugs with the Google Maps API.
 
 ## Frequently Asked Questions (FAQ)
 **Q: How do I create an event?**  
@@ -32,6 +46,12 @@ A: Navigate to the 'Events' menu in the WordPress admin and click 'Add New' to c
 
 **Q: Can I customize the appearance of the calendar?**  
 A: Yes, you can customize the styles through the plugin settings and your theme's CSS.
+
+**Q: What if the default slugs conflict with existing pages on my site?**  
+A: If the default slugs conflict with existing pages on your site, you have two options:
+1. Change the slug of your existing page(s)
+2. Customize the plugin's slugs in Settings > My Events Calendar > URL Slugs
+Note: After changing any slugs, you may need to refresh your permalinks by going to Settings > Permalinks and clicking "Save Changes".
 
 ## Support
 For support, please email customerservice@makingtheimpact.com.

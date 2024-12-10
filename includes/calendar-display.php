@@ -120,7 +120,35 @@ function my_events_calendar_shortcode() {
         .mec-event-category-' . $event_cat->slug . ':hover { background-color: ' . $category_color . '; color: ' . $text_color . '; opacity: 0.8; }
         ';
     }
+    // Get options for colors
+    $options = mec_get_options();
+    $accent_background_color = $options['accent_background_color'] ?? '#0067d4';
+    $accent_background_color_hover = $options['accent_background_color_hover'] ?? '#0f7bee';
+    $accent_text_color = $options['accent_text_color'] ?? '#ffffff';
+    $accent_text_color_hover = $options['accent_text_color_hover'] ?? '#ffffff';
+
+    $css .= '
+        #calendar .fc-button-primary{
+            background-color: ' . $accent_background_color . ' !important;
+            color: ' . $accent_text_color . ' !important;
+            border-color: ' . $accent_background_color . ' !important;
+        }
+        #calendar .fc-button-primary:hover, 
+        #calendar .fc-button-primary:active, 
+        #calendar .fc-button-primary:focus {
+            background-color: ' . $accent_background_color_hover . ' !important;
+            color: ' . $accent_text_color_hover . ' !important;
+            border-color: ' . $accent_background_color_hover . ' !important;
+        }
+        #calendar .fc-today-button:disabled {
+            background-color: #e9ecef !important;
+            color: #777 !important;
+            border-color: #ddd !important;
+            opacity: 0.65;
+        }';
     $css .= '</style>';
+
+
     echo $css;
 
     // Render calendar

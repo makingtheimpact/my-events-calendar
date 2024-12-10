@@ -1,6 +1,35 @@
 <?php
 
+function my_events_calendar_check_slug_conflicts() {
+    $potential_conflicts = array(
+        'events' => __('Events', 'my-events-calendar'),
+        'event-location' => __('Event Location', 'my-events-calendar'),
+        'event-category' => __('Event Category', 'my-events-calendar')
+    );
+
+    $conflicts = array();
+
+    foreach ($potential_conflicts as $slug => $post_type_name) {
+        // Check if a page exists with this slug
+        $page = get_page_by_path($slug);
+        if ($page) {
+            $conflicts[] = sprintf(
+                __('The slug "%s" is already in use by a page titled "%s". This may cause conflicts with the %s post type.', 'my-events-calendar'),
+                $slug,
+                $page->post_title,
+                $post_type_name
+            );
+        }
+    }
+
+    return $conflicts;
+}
+
 function my_events_calendar_register_post_type() {
+    // Get custom slug from options, fallback to default if not set
+    $options = get_option('my_events_calendar_options');
+    $event_slug = isset($options['event_slug']) ? $options['event_slug'] : 'events';
+    
     $labels = array(
         'name' => 'Events',
         'singular_name' => 'Event',
@@ -24,7 +53,7 @@ function my_events_calendar_register_post_type() {
         'show_ui' => true,
         'show_in_menu' => true,
         'query_var' => true,
-        'rewrite' => array('slug' => 'events', 'with_front' => false),
+        'rewrite' => array('slug' => $event_slug, 'with_front' => false),
         'capability_type' => 'post',
         'has_archive' => true,
         'hierarchical' => false,
@@ -839,3 +868,43 @@ function my_events_calendar_orderby_custom_columns($query) {
     }
 }
 add_action('pre_get_posts', 'my_events_calendar_orderby_custom_columns');
+
+function my_events_calendar_admin_notices() {
+    // Only show to administrators
+    if (!current_user_can('manage_options')) {
+        return;
+    }
+
+    $conflicts = my_events_calendar_check_slug_conflicts();
+    
+    if (!empty($conflicts)) {
+        echo '<div class="notice notice-warning is-dismissible">';
+        echo '<p><strong>' . __('My Events Calendar - Slug Conflicts Detected:', 'my-events-calendar') . '</strong></p>';
+        echo '<ul style="list-style-type: disc; margin-left: 20px;">';
+        foreach ($conflicts as $conflict) {
+            echo '<li>' . esc_html($conflict) . '</li>';
+        }
+        echo '</ul>';
+        echo '<p>' . __('To resolve these conflicts, you can either:', 'my-events-calendar') . '</p>';
+        echo '<ul style="list-style-type: disc; margin-left: 20px;">';
+        echo '<li>' . __('Change the slug of the conflicting page(s)', 'my-events-calendar') . '</li>';
+        echo '<li>' . __('Customize the plugin\'s post type slugs in the plugin settings', 'my-events-calendar') . '</li>';
+        echo '</ul>';
+        echo '</div>';
+    }
+}
+add_action('admin_notices', 'my_events_calendar_admin_notices');
+
+function my_events_calendar_maybe_flush_rules() {
+    if (get_option('my_events_calendar_flush_rewrite_rules', false)) {
+        flush_rewrite_rules();
+        delete_option('my_events_calendar_flush_rewrite_rules');
+    }
+}
+add_action('init', 'my_events_calendar_maybe_flush_rules');
+
+// Add this to your settings save callback
+function my_events_calendar_after_save_settings() {
+    update_option('my_events_calendar_flush_rewrite_rules', true);
+}
+add_action('my_events_calendar_settings_saved', 'my_events_calendar_after_save_settings');

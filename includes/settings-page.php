@@ -1,5 +1,30 @@
 <?php
 
+function mec_get_default_options() {
+    return array(
+        'event_slug' => 'events',
+        'location_slug' => 'event-location',
+        'category_slug' => 'event-category',
+        'accent_background_color' => '#0067d4',
+        'accent_background_color_hover' => '#0f7bee',
+        'accent_text_color' => '#ffffff',
+        'accent_text_color_hover' => '#ffffff',
+        'show_map' => 'yes',
+        'show_categories' => 'yes',
+        'default_view' => 'month',
+        'google_maps_api_key' => '',
+        'map_center_lat' => '37.0902',
+        'map_center_lng' => '-95.7129',
+        'map_zoom' => '4'
+    );
+}
+
+function mec_get_options() {
+    $defaults = mec_get_default_options();
+    $options = get_option('my_events_calendar_options', array());
+    return wp_parse_args($options, $defaults);
+}
+
 function my_events_calendar_add_admin_menu() {
     add_menu_page(
         'Events Calendar',
@@ -146,60 +171,95 @@ function my_events_calendar_dashboard() {
 function my_events_calendar_settings_page() {
     ?>
     <div class="wrap">
-    <h1><?php _e('Events Calendar Settings', 'my-events-calendar'); ?></h1>
-    <?php settings_errors('my_events_calendar_options'); ?>
+        <h1><?php _e('Events Calendar Settings', 'my-events-calendar'); ?></h1>
+        <?php settings_errors('my_events_calendar_options'); ?>
+        
         <form method="post" action="options.php">
-            
             <?php
                 settings_fields('my_events_calendar_options_group');
-                // Add nonce field
                 wp_nonce_field('my_events_calendar_save_settings', 'my_events_calendar_settings_nonce');
             ?>
 
-            <h2><?php _e('Calendar Display Settings', 'my-events-calendar'); ?></h2>
-            <p><?php _e('Customize how the calendar and events are displayed.', 'my-events-calendar'); ?></p>
-            <?php
-            my_events_calendar_default_view_render();
-            my_events_calendar_show_share_buttons_render();
-            my_events_calendar_date_format_render();
-            my_events_calendar_time_format_render();
-            ?>
+            <div class="mec-settings-section-header">
+                <h2><?php _e('Event Display Settings', 'my-events-calendar'); ?></h2>
+                <p class="description"><?php _e('Control what information is displayed on event pages.', 'my-events-calendar'); ?></p>
+            </div>
+            <div class="mec-setting-section">
+                <?php my_events_calendar_show_categories_render(); ?>
+            </div>
 
-            <h2><?php _e('Social Sharing Settings', 'my-events-calendar'); ?></h2>
-            <p><?php _e('Configure social sharing options for events.', 'my-events-calendar'); ?></p>
-            <?php
-            my_events_calendar_show_share_buttons_render();
-            my_events_calendar_show_facebook_render();
-            my_events_calendar_show_twitter_render();            
-            my_events_calendar_show_email_render();
-            my_events_calendar_show_linkedin_render();
-            my_events_calendar_show_whatsapp_render();
-            my_events_calendar_show_sms_render();
-            my_events_calendar_show_copy_link_render();
-            ?>
+            <div class="mec-settings-section-header">
+                <h2><?php _e('URL Slugs', 'my-events-calendar'); ?></h2>
+                <p class="description"><?php _e('Customize the URL slugs for events and locations.', 'my-events-calendar'); ?></p>
+            </div>
+            <div class="mec-setting-section">
+                <?php
+                my_events_calendar_event_slug_render();
+                my_events_calendar_location_slug_render();
+                ?>
+            </div>
 
-            <h2><?php _e('Add to Calendar Settings', 'my-events-calendar'); ?></h2>
-            <p><?php _e('Enable options for adding events to calendars.', 'my-events-calendar'); ?></p>
-            <?php
-            my_events_calendar_show_add_to_calendar_render();
-            my_events_calendar_show_add_to_google_calendar_render();
-            my_events_calendar_show_add_to_apple_calendar_render();
-            ?>
+            <div class="mec-settings-section-header">
+                <h2><?php _e('Event Date and Time Settings', 'my-events-calendar'); ?></h2>
+                <p class="description"><?php _e('Control how the date and time are displayed on event pages.', 'my-events-calendar'); ?></p>
+            </div>
+            <div class="mec-setting-section">
+                <?php my_events_calendar_date_format_render(); ?>
+                <?php my_events_calendar_time_format_render(); ?>
+            </div>
 
-            <h2><?php _e('Google Maps', 'my-events-calendar'); ?></h2>
-            <p><?php _e('Enter your Google Maps API key to enable map features.', 'my-events-calendar'); ?></p>
-            <?php
-            my_events_calendar_google_maps_api_key_render();
-            ?>
+            <div class="mec-settings-section-header">
+                <h2><?php _e('Appearance Settings', 'my-events-calendar'); ?></h2>
+                <p class="description"><?php _e('Customize the look and feel of your events calendar.', 'my-events-calendar'); ?></p>
+            </div>
+            <div class="mec-setting-section">
+                <?php my_events_calendar_accent_colors_render(); ?>
+            </div>
 
-            <h2><?php _e('Accent Colors', 'my-events-calendar'); ?></h2>
-            <p><?php _e('Customize the accent colors for the event detail pages.', 'my-events-calendar'); ?></p>
-            <?php my_events_calendar_accent_colors_render(); ?>
+            <div class="mec-settings-section-header">
+                <h2><?php _e('Social Sharing Settings', 'my-events-calendar'); ?></h2>
+                <p class="description"><?php _e('Configure social sharing options for events.', 'my-events-calendar'); ?></p>
+            </div>
+            <div class="mec-setting-section">
+                <?php
+                my_events_calendar_show_share_buttons_render();
+                my_events_calendar_show_facebook_render();
+                my_events_calendar_show_twitter_render();
+                my_events_calendar_show_email_render();
+                my_events_calendar_show_linkedin_render();
+                my_events_calendar_show_whatsapp_render();
+                my_events_calendar_show_sms_render();
+                my_events_calendar_show_copy_link_render();
+                ?>
+            </div>
+
+            <div class="mec-settings-section-header">
+                <h2><?php _e('Calendar Integration', 'my-events-calendar'); ?></h2>
+                <p class="description"><?php _e('Enable options for adding events to calendars.', 'my-events-calendar'); ?></p>
+            </div>
+            <div class="mec-setting-section">
+                <?php
+                my_events_calendar_show_add_to_calendar_render();
+                my_events_calendar_show_add_to_google_calendar_render();
+                my_events_calendar_show_add_to_apple_calendar_render();
+                ?>
+            </div>
+
+            <div class="mec-settings-section-header">
+                <h2><?php _e('Google Maps Settings', 'my-events-calendar'); ?></h2>
+                <p class="description"><?php _e('Configure Google Maps integration for event locations.', 'my-events-calendar'); ?></p>
+            </div>
+            <div class="mec-setting-section">
+                <?php 
+                my_events_calendar_show_map_render();
+                my_events_calendar_google_maps_api_key_render(); 
+                ?>
+            </div>
 
             <?php submit_button(); ?>
         </form>
     </div>
-    <?php    
+    <?php
 }
 
 function my_events_calendar_settings_init() {
@@ -503,8 +563,18 @@ function my_events_calendar_show_add_to_apple_calendar_render() {
 function my_events_calendar_options_validate($input) {
     $sanitized_input = array();
 
-    // Verify nonce
     if (isset($_POST['my_events_calendar_settings_nonce']) && wp_verify_nonce($_POST['my_events_calendar_settings_nonce'], 'my_events_calendar_save_settings')) {
+        // Validate and sanitize URL slugs
+        $sanitized_input['event_slug'] = sanitize_title($input['event_slug']);
+        $sanitized_input['location_slug'] = sanitize_title($input['location_slug']);
+
+        // If slugs have changed, schedule a rewrite flush
+        $old_options = get_option('my_events_calendar_options');
+        if ($sanitized_input['event_slug'] !== ($old_options['event_slug'] ?? 'events') ||
+            $sanitized_input['location_slug'] !== ($old_options['location_slug'] ?? 'event-location')) {
+            update_option('my_events_calendar_flush_rewrite_rules', true);
+        }
+
         // Validate and sanitize each option
         $sanitized_input['default_view'] = in_array($input['default_view'], ['dayGridMonth', 'timeGridWeek', 'timeGridDay']) ? $input['default_view'] : 'dayGridMonth';
         $sanitized_input['date_format'] = in_array($input['date_format'], ['m/d/Y', 'Y-m-d', 'd/m/Y', 'F j, Y', 'jS F Y']) ? $input['date_format'] : 'Y-m-d';
@@ -527,6 +597,12 @@ function my_events_calendar_options_validate($input) {
         $sanitized_input['accent_background_color_hover'] = sanitize_text_field($input['accent_background_color_hover']);
         $sanitized_input['accent_text_color'] = sanitize_text_field($input['accent_text_color']);
         $sanitized_input['accent_text_color_hover'] = sanitize_text_field($input['accent_text_color_hover']);
+
+        // Add validation for show_categories
+        $sanitized_input['show_categories'] = isset($input['show_categories']) ? 'yes' : 'no';
+
+        // Add validation for show_map
+        $sanitized_input['show_map'] = isset($input['show_map']) ? 'yes' : 'no';
     }
 
     return $sanitized_input;
@@ -575,21 +651,51 @@ function my_events_calendar_accent_colors_render() {
     <h3><?php _e('Accent Colors', 'my-events-calendar'); ?></h3>
     <p class="description"><?php _e('These colors will be used for the accent colors of the calendar.', 'my-events-calendar'); ?></p>
 
-    <label for='my_events_calendar_options[accent_background_color]'><?php _e('Background Color', 'my-events-calendar'); ?></label>
-    <input type='text' name='my_events_calendar_options[accent_background_color]' value='<?php echo esc_attr($accent_background_color); ?>' class="mec-color-field" />
-    <p class="description"><?php _e('This color is used for the background color of buttons and for the color of the social share icons on the event details page.', 'my-events-calendar'); ?></p>
+    <div class="mec-color-setting">
+        <label for="accent_background_color"><?php _e('Background Color', 'my-events-calendar'); ?></label>
+        <input type="text" 
+               id="accent_background_color"
+               name="my_events_calendar_options[accent_background_color]" 
+               value="<?php echo esc_attr($accent_background_color); ?>" 
+               class="mec-color-field" />
+        <p class="description"><?php _e('This color is used for the background color of buttons and for the color of the social share icons.', 'my-events-calendar'); ?></p>
+    </div>
 
-    <label for='my_events_calendar_options[accent_background_color_hover]'><?php _e('Background Color Hover', 'my-events-calendar'); ?></label>
-    <input type='text' name='my_events_calendar_options[accent_background_color_hover]' value='<?php echo esc_attr($accent_background_color_hover); ?>' class="mec-color-field" />
-    <p class="description"><?php _e('This color is used for the hover background color of buttons and for the color of the social share icons on the event details page.', 'my-events-calendar'); ?></p>
+    <div class="mec-color-setting">
+        <label for="accent_background_color_hover"><?php _e('Background Color Hover', 'my-events-calendar'); ?></label>
+        <input type="text" 
+               id="accent_background_color_hover"
+               name="my_events_calendar_options[accent_background_color_hover]" 
+               value="<?php echo esc_attr($accent_background_color_hover); ?>" 
+               class="mec-color-field" />
+        <p class="description"><?php _e('This color is used for the hover background color of buttons.', 'my-events-calendar'); ?></p>
+    </div>
 
-    <label for='my_events_calendar_options[accent_text_color]'><?php _e('Text Color', 'my-events-calendar'); ?></label>
-    <input type='text' name='my_events_calendar_options[accent_text_color]' value='<?php echo esc_attr($accent_text_color); ?>' class="mec-color-field" />
-    <p class="description"><?php _e('This color is used for the text color of the text on the buttons of the event details page.', 'my-events-calendar'); ?></p>
+    <div class="mec-color-setting">
+        <label for="accent_text_color"><?php _e('Text Color', 'my-events-calendar'); ?></label>
+        <input type="text" 
+               id="accent_text_color"
+               name="my_events_calendar_options[accent_text_color]" 
+               value="<?php echo esc_attr($accent_text_color); ?>" 
+               class="mec-color-field" />
+        <p class="description"><?php _e('This color is used for the text color on buttons.', 'my-events-calendar'); ?></p>
+    </div>
 
-    <label for='my_events_calendar_options[accent_text_color_hover]'><?php _e('Text Color Hover', 'my-events-calendar'); ?></label>
-    <input type='text' name='my_events_calendar_options[accent_text_color_hover]' value='<?php echo esc_attr($accent_text_color_hover); ?>' class="mec-color-field" />
-    <p class="description"><?php _e('This color is used for the hover text color of the text on the buttons of the event details page.', 'my-events-calendar'); ?></p>
+    <div class="mec-color-setting">
+        <label for="accent_text_color_hover"><?php _e('Text Color Hover', 'my-events-calendar'); ?></label>
+        <input type="text" 
+               id="accent_text_color_hover"
+               name="my_events_calendar_options[accent_text_color_hover]" 
+               value="<?php echo esc_attr($accent_text_color_hover); ?>" 
+               class="mec-color-field" />
+        <p class="description"><?php _e('This color is used for the hover text color on buttons.', 'my-events-calendar'); ?></p>
+    </div>
+
+    <script>
+    jQuery(document).ready(function($) {
+        $('.mec-color-field').wpColorPicker();
+    });
+    </script>
     <?php
 }
 
@@ -611,3 +717,126 @@ function my_events_calendar_event_admin_notices() {
     }
 }
 add_action('admin_notices', 'my_events_calendar_event_admin_notices');
+
+function my_events_calendar_add_slug_settings($settings) {
+    $settings['slugs'] = array(
+        'title' => __('URL Slugs', 'my-events-calendar'),
+        'fields' => array(
+            'event_slug' => array(
+                'label' => __('Events Slug', 'my-events-calendar'),
+                'type' => 'text',
+                'default' => 'events',
+                'description' => __('The URL slug for events (default: events)', 'my-events-calendar'),
+            ),
+            'location_slug' => array(
+                'label' => __('Location Slug', 'my-events-calendar'),
+                'type' => 'text',
+                'default' => 'event-location',
+                'description' => __('The URL slug for event locations (default: event-location)', 'my-events-calendar'),
+            ),
+        )
+    );
+    return $settings;
+}
+add_filter('my_events_calendar_settings', 'my_events_calendar_add_slug_settings');
+
+// Add these new functions for the slug settings
+function my_events_calendar_event_slug_render() {
+    $options = get_option('my_events_calendar_options');
+    $event_slug = isset($options['event_slug']) ? $options['event_slug'] : 'events';
+    ?>
+    <div class="mec-slug-setting">
+        <label for="my_events_calendar_options[event_slug]"><?php _e('Events Slug', 'my-events-calendar'); ?></label>
+        <input type="text" id="my_events_calendar_options[event_slug]" 
+               name="my_events_calendar_options[event_slug]" 
+               value="<?php echo esc_attr($event_slug); ?>"
+               class="regular-text">
+        <p class="description">
+            <?php _e('The base slug for event pages. Default: events', 'my-events-calendar'); ?>
+        </p>
+        <p class="description">
+            <?php printf(__('Your events will be accessible at: %s', 'my-events-calendar'), 
+                        '<code>' . esc_html(home_url('/' . $event_slug . '/')) . '</code>'); ?>
+        </p>
+    </div>
+    <?php
+}
+
+function my_events_calendar_location_slug_render() {
+    $options = get_option('my_events_calendar_options');
+    $location_slug = isset($options['location_slug']) ? $options['location_slug'] : 'event-location';
+    ?>
+    <div class="mec-slug-setting">
+        <label for="my_events_calendar_options[location_slug]"><?php _e('Location Slug', 'my-events-calendar'); ?></label>
+        <input type="text" id="my_events_calendar_options[location_slug]" 
+               name="my_events_calendar_options[location_slug]" 
+               value="<?php echo esc_attr($location_slug); ?>"
+               class="regular-text">
+        <p class="description">
+            <?php _e('The base slug for location pages. Default: event-location', 'my-events-calendar'); ?>
+        </p>
+        <p class="description">
+            <?php printf(__('Your locations will be accessible at: %s', 'my-events-calendar'), 
+                        '<code>' . esc_html(home_url('/' . $location_slug . '/')) . '</code>'); ?>
+        </p>
+    </div>
+    <?php
+}
+
+// Add this after the existing my_events_calendar_event_admin_notices function
+function my_events_calendar_permalink_notice() {
+    if (get_option('my_events_calendar_flush_rewrite_rules', false)) {
+        ?>
+        <div class="notice notice-warning is-dismissible">
+            <p>
+                <?php _e('You have changed the URL slugs for your events or locations. Remember to ', 'my-events-calendar'); ?>
+                <a href="<?php echo admin_url('options-permalink.php'); ?>">
+                    <?php _e('refresh your permalinks', 'my-events-calendar'); ?>
+                </a>
+                <?php _e(' for these changes to take effect.', 'my-events-calendar'); ?>
+            </p>
+        </div>
+        <?php
+    }
+}
+add_action('admin_notices', 'my_events_calendar_permalink_notice');
+
+// Add this new function for the category display setting
+function my_events_calendar_show_categories_render() {
+    $options = get_option('my_events_calendar_options');
+    $show_categories = isset($options['show_categories']) ? $options['show_categories'] : 'yes';
+    ?>
+    <div class="mec-display-setting">
+        <label>
+            <input type="checkbox" 
+                   name="my_events_calendar_options[show_categories]" 
+                   value="yes" 
+                   <?php checked($show_categories, 'yes'); ?>>
+            <?php _e('Show event categories on event detail pages', 'my-events-calendar'); ?>
+        </label>
+        <p class="description">
+            <?php _e('When enabled, event categories will be displayed on the event detail pages.', 'my-events-calendar'); ?>
+        </p>
+    </div>
+    <?php
+}
+
+// Add this new function for the map display setting
+function my_events_calendar_show_map_render() {
+    $options = get_option('my_events_calendar_options');
+    $show_map = isset($options['show_map']) ? $options['show_map'] : 'yes';
+    ?>
+    <div class="mec-display-setting">
+        <label>
+            <input type="checkbox" 
+                   name="my_events_calendar_options[show_map]" 
+                   value="yes" 
+                   <?php checked($show_map, 'yes'); ?>>
+            <?php _e('Show Google Maps on event detail pages', 'my-events-calendar'); ?>
+        </label>
+        <p class="description">
+            <?php _e('When enabled, a Google Map will be displayed for physical event locations.', 'my-events-calendar'); ?>
+        </p>
+    </div>
+    <?php
+}

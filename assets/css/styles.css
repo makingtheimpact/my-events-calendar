@@ -1,3 +1,216 @@
+/* Event Location Archive Page */
+.mec-event-locations-archive {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.mec-archive-header {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.mec-event-locations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.mec-location-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s ease-in-out;
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.mec-location-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.mec-location-image {
+    position: relative;
+    padding-top: 56.25%; /* 16:9 aspect ratio */
+    overflow: hidden;
+}
+
+.mec-location-image img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.mec-location-content {
+    padding: 1.5rem;
+}
+
+.mec-location-title {
+    margin: 0 0 1rem;
+    font-size: 1.25rem;
+}
+
+.mec-location-title a {
+    color: #333;
+    text-decoration: none;
+}
+
+.mec-location-details {
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.mec-virtual-label {
+    display: inline-block;
+    background: #e9ecef;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    color: #495057;
+    margin-bottom: 1rem;
+}
+
+.mec-upcoming-events-count {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 1rem;
+}
+
+.mec-view-location-link {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.mec-view-location-link:hover {
+    background: #0056b3;
+    color: #fff;
+}
+
+/* Single Event Location Page */
+.mec-event-location-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.mec-event-location-header {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.mec-event-location-image {
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.mec-event-location-image img {
+    width: 100%;
+    height: auto;
+}
+
+.mec-event-location-title {
+    margin: 0 0 1.5rem;
+    font-size: 2rem;
+    color: #333;
+}
+
+.mec-event-location-content {
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.mec-event-location-details {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.mec-event-location-address-details h3,
+.mec-event-location-virtual h3 {
+    margin: 0 0 1rem;
+    font-size: 1.25rem;
+    color: #333;
+}
+
+.mec-address,
+.mec-city-state-zip {
+    margin: 0 0 0.5rem;
+    color: #666;
+}
+
+.mec-location-url a {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.mec-location-url a:hover {
+    background: #0056b3;
+}
+
+.mec-event-location-upcoming-events {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e0e0e0;
+}
+
+.mec-event-location-upcoming-events h3 {
+    margin: 0 0 1rem;
+    font-size: 1.25rem;
+    color: #333;
+}
+
+.mec-events-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.mec-event-item {
+    margin-bottom: 0.75rem;
+}
+
+.mec-event-item a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.mec-event-item a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .mec-event-locations-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .mec-event-location-container {
+        padding: 1rem;
+    }
+
+    .mec-event-location-title {
+        font-size: 1.5rem;
+    }
+} 
+
 /* Calendar Styles */
 .fc-event {
     transition: background-color 0.3s, color 0.3s;
@@ -122,9 +335,17 @@
     margin: 0 auto; 
     padding: 20px;
 }
-.mec-event-title h2 {
-    font-size: 1.8em;
+.mec-event-title h1 {
+    font-size: 2em;
     font-weight: bold;
+}
+.mec-event-category {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: right;
+    padding: 5px 10px;
+    border-radius: 5px;
 }
 .mec-event-image-container img {
     margin-bottom: 20px;
@@ -171,10 +392,13 @@
     margin-top: 20px;
 }
 .mec-share-button .dashicons {
-    margin-right: 10px;
+    display: inline-block;
+    margin: 5px;
     font-size: 30px;
     width: 30px;
     height: 30px;
+    text-decoration: none;
+    transition: color 0.3s ease;
 }
 .mec-share-button {
     color: #0067d4;
@@ -285,6 +509,14 @@
     height: 400px;
     margin-top: 20px;
     margin-bottom: 5px;
+}
+.mec-event-category-bar {
+    border-radius: 15px;
+    padding: 5px 15px;
+    margin-bottom: 10px;
+    font-size: 1.1em;
+    font-weight: bold;
+    text-align: right;
 }
 @media (max-width: 768px) {
     .mec-event-location-image {
