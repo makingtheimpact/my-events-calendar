@@ -245,7 +245,7 @@ while (have_posts()) : the_post();
                 $show_map = isset($options['show_map']) ? $options['show_map'] : 'yes';
                 $api_key = isset($options['google_maps_api_key']) ? $options['google_maps_api_key'] : '';
 
-                // Only show map if setting is enabled and we have an API key and physical location
+                // Only show map if setting is enabled, we have an API key, and a physical location
                 if ($show_map === 'yes' && !empty($api_key) && $location_type === 'physical' && !empty($location_address)) {
                     ?>
                     <div id="mec-event-map"></div>
@@ -287,7 +287,9 @@ while (have_posts()) : the_post();
                                     title: '<?php echo esc_js($location_name); ?>'
                                 });
                             } else {
-                                console.error('No results found for address:', address);
+                                console.warn('No results found for address:', address);
+                                // Optionally hide the map if no results are found
+                                document.getElementById('mec-event-map').style.display = 'none';
                             }
                         } catch (error) {
                             console.error('Geocoding error:', error);
@@ -304,6 +306,11 @@ while (have_posts()) : the_post();
                         </a>
                     </p>
                     <?php
+                } else {
+                    // declare the initMap function to get rid of error in console
+                    echo '<script>function initMap() {}</script>';
+                    // Hide the map if not enabled or no API key or no physical location
+                    echo '<div id="mec-event-map" style="display: none;"></div>';   
                 }
                 ?>
 

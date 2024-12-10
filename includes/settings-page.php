@@ -11,7 +11,7 @@ function mec_get_default_options() {
         'accent_text_color_hover' => '#ffffff',
         'show_map' => 'yes',
         'show_categories' => 'yes',
-        'default_view' => 'month',
+        'default_view' => 'dayGridMonth',
         'google_maps_api_key' => '',
         'map_center_lat' => '37.0902',
         'map_center_lng' => '-95.7129',
@@ -575,8 +575,11 @@ function my_events_calendar_options_validate($input) {
             update_option('my_events_calendar_flush_rewrite_rules', true);
         }
 
+        // Ensure default_view is set
+        $sanitized_input['default_view'] = isset($input['default_view']) ? $input['default_view'] : 'dayGridMonth';
+        $sanitized_input['default_view'] = in_array($sanitized_input['default_view'], ['dayGridMonth', 'timeGridWeek', 'timeGridDay']) ? $sanitized_input['default_view'] : 'dayGridMonth';
+
         // Validate and sanitize each option
-        $sanitized_input['default_view'] = in_array($input['default_view'], ['dayGridMonth', 'timeGridWeek', 'timeGridDay']) ? $input['default_view'] : 'dayGridMonth';
         $sanitized_input['date_format'] = in_array($input['date_format'], ['m/d/Y', 'Y-m-d', 'd/m/Y', 'F j, Y', 'jS F Y']) ? $input['date_format'] : 'Y-m-d';
         $sanitized_input['time_format'] = in_array($input['time_format'], ['g:i A', 'H:i', 'g:ia']) ? $input['time_format'] : 'H:i';        
         $sanitized_input['show_share_buttons'] = isset($input['show_share_buttons']) ? 'yes' : 'no';
